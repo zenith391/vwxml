@@ -1,6 +1,6 @@
-import vwxml
+import xml
 
 fn main() {
-	node := vwxml.parse('<thing abc="test"><test>Hello</test></thing>')
+	node := xml.parse('<thing abc="test"><test>Hello</test></thing>')
 	println(node)
 }

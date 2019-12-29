@@ -1,4 +1,4 @@
-module vwxml
+module xml
 
 struct Attribute {
 	pub mut:
