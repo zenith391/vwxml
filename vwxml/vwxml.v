@@ -15,6 +15,10 @@ struct Node {
 		parent &Node
 }
 
+fn can_be_included(ch byte) bool {
+	return ch != `\n` && ch != `\t`
+}
+
 pub fn parse(xml string) Node {
 	root := Node{[]Attribute, "_root_", "", []Node, &Node(0)}
 	chars := xml.bytes()
@@ -28,7 +32,6 @@ pub fn parse(xml string) Node {
 	mut tag_text := ""
 	mut tag_attributes := []Attribute
 	mut curr_node := &root
-
 	for ch in chars {
 		if in_head_tag {
 			if ch == `>` {
@@ -74,7 +77,9 @@ pub fn parse(xml string) Node {
 						}
 					}
 				} else {
-					head_tag_str = head_tag_str + ch.str()
+					if (can_be_included(ch)) {
+						head_tag_str = head_tag_str + ch.str()
+					}
 				}
 			}
 		} else {
@@ -82,7 +87,9 @@ pub fn parse(xml string) Node {
 				in_head_tag = true
 				head_tag_str = ""
 			} else {
-				tag_text = tag_text + ch.str()
+				if (can_be_included(ch)) {
+					tag_text = tag_text + ch.str()
+				}
 			}
 		}
 	}
