@@ -6,7 +6,6 @@ Example: this parses `<thing abc="test"><test>Hello</test></thing>` to
 (struct printed with `println`).
 
 It doesn't support (yet):
-- Comments
 - CDATA sections
 - Error handling
 - Schemas (DTD)
