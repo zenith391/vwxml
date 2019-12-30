@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<data type="some data" amount="2">
+		<cell name="cell1">Hello</cell>
+		<cell name="cell2">World</cell>
+	</data>
+	<metadata>
+		<text>What great parser we have here!</text>
+	</metadata>
+</project>
