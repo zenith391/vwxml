@@ -2,7 +2,10 @@
 <project> <!-- The project -->
 	<data type="some data" amount="2">
 		<cell name="cell1">Hello</cell>
-		<cell name="cell2">World</cell>
+		<cell name="cell2">World</cell> <!--compact comment-->
+		<!-- Commenting out tags
+			<cell name="cell3">I'm commented</cell>
+		-->
 	</data>
 	<metadata> <!-- Comments are cool -->
 		<text>What great parser we have here!</text>

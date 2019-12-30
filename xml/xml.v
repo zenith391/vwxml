@@ -77,6 +77,7 @@ pub fn parse(xml string) Node {
 				state.in_attribute_key = false
 				state.in_attribute_val = false
 				state.word = ""
+				state.tag_text = ""
 			}
 			if state.in_head_tag {
 				if ch == `>` {
