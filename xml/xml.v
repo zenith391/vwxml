@@ -32,8 +32,16 @@ fn can_be_included(ch byte) bool {
 	return ch != `\n` && ch != `\t` && ch != `\r`
 }
 
+fn unescape_string(str string) string {
+	return str.replace("&lt;", '<')
+	          .replace("&gt;", '>')
+	          .replace("&amp;", '&')
+	          .replace("&apos;", "'")
+	          .replace("&quot;", '"')
+}
+
 pub fn (state mut ParserState) push_attribute() {
-	state.tag_attributes << Attribute{state.attr_key, state.attr_val}
+	state.tag_attributes << Attribute{state.attr_key, unescape_string(state.attr_val)}
 }
 
 pub fn (attr Attribute) str() string {
@@ -58,7 +66,7 @@ pub fn parse(xml string) Node {
 				state.in_attribute_val = false
 				head := state.head_tag_str
 				if head.starts_with("/") { // closing head
-					curr_node.text = state.tag_text
+					curr_node.text = unescape_string(state.tag_text)
 					curr_node.parent.childrens << *curr_node
 					curr_node = curr_node.parent
 					state.tag_text = ""
@@ -96,7 +104,7 @@ pub fn parse(xml string) Node {
 							state.attr_key = state.attr_key + ch.str()
 						}
 					} else if state.in_attribute_val {
-						if ch == `"` || ch == `'` {
+						if ch == `"` || ch == `'` { // TODO: not allow to open with " and finish with '
 							state.in_string = !state.in_string
 						} else {
 							if state.in_string {

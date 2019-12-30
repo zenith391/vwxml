@@ -19,3 +19,9 @@ fn test_file_xml() {
 	assert prj.childrens[0].attributes[0].value == "some data"
 	assert prj.childrens[0].attributes[1].value == "2"
 }
+
+fn test_escape() {
+	node := xml.parse('<thing abc="Morning &amp; Co.">&lt;Hello&gt;</thing>')
+	assert node.childrens[0].text == "<Hello>"
+	assert node.childrens[0].attributes[0].value == "Morning & Co."
+}
