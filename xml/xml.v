@@ -23,10 +23,10 @@ struct ParserState {
 
 struct Node {
 	pub mut:
-		attributes []Attribute
-		name string
-		text string
-		childrens []Node
+		attributes []Attribute = []Attribute{}
+		name string = ''
+		text string = ''
+		childrens []Node = []Node{}
 		parent &Node
 }
 
@@ -42,7 +42,7 @@ fn unescape_string(str string) string {
 	          .replace("&quot;", '"')
 }
 
-pub fn (state mut ParserState) push_attribute() {
+pub fn (mut state ParserState) push_attribute() {
 	state.tag_attributes << Attribute{state.attr_key, unescape_string(state.attr_val)}
 }
 
@@ -55,10 +55,10 @@ pub fn (node Node) str() string {
 }
 
 pub fn parse(xml string) Node {
-	root := Node{[]Attribute, "_root_", "", []Node, &Node(0)}
+	root := Node{name: '_root_', parent: &Node(0)}
 	chars := xml.bytes()
 
-	mut state := ParserState{false,false,false,"","",false,"","",false,"",[]Attribute} // initialize with default parameters
+	mut state := ParserState{} // initialize with default parameters
 	mut curr_node := &root
 	for ch in chars {
 		state.word = state.word + ch.str()
@@ -66,12 +66,12 @@ pub fn parse(xml string) Node {
 			state.word = ""
 		}
 		if state.in_comment {
-			if (state.word == "-->") { // comment end
+			if state.word == '-->' { // comment end
 				state.in_comment = false
 				state.word = ""
 			}
 		} else {
-			if state.word == "<!--" { // comment start
+			if state.word == '<!--' { // comment start
 				state.in_comment = true
 				state.in_head_tag = false
 				state.in_attribute_key = false
@@ -91,26 +91,26 @@ pub fn parse(xml string) Node {
 						curr_node = curr_node.parent
 						state.tag_text = ""
 					} else if head.starts_with("?") { // incomplete test
-						if (state.attr_key != "") {
+						if state.attr_key != "" {
 							state.push_attribute()
 						}
 						state.attr_key = ""
 						state.attr_val = ""
 						state.tag_attributes = []
 					} else {
-						if (state.attr_key != "") {
+						if state.attr_key != "" {
 							state.push_attribute()
 						}
 						state.attr_key = ""
 						state.attr_val = ""
-						curr_node = &Node{state.tag_attributes, state.head_tag_str, "", []Node, curr_node}
+						curr_node = &Node{attributes:state.tag_attributes, name: state.head_tag_str, parent: curr_node}
 						state.tag_attributes = []
 					}
 				} else {
 					if !state.in_string && ch == ` ` {
 						state.in_attribute_key = true
 						state.in_attribute_val = false
-						if (state.attr_key != "") {
+						if state.attr_key != "" {
 							state.push_attribute()
 						}
 						state.attr_key = ""
@@ -126,14 +126,12 @@ pub fn parse(xml string) Node {
 						} else if state.in_attribute_val {
 							if ch == `"` || ch == `'` { // TODO: not allow to open with " and finish with '
 								state.in_string = !state.in_string
-							} else {
-								if state.in_string {
-									state.attr_val = state.attr_val + ch.str()
-								}
+							} else if state.in_string {
+								state.attr_val = state.attr_val + ch.str()
 							}
 						}
 					} else {
-						if (can_be_included(ch)) {
+						if can_be_included(ch) {
 							state.head_tag_str = state.head_tag_str + ch.str()
 						}
 					}
@@ -143,7 +141,7 @@ pub fn parse(xml string) Node {
 					state.in_head_tag = true
 					state.head_tag_str = ""
 				} else {
-					if (can_be_included(ch)) {
+					if can_be_included(ch) {
 						state.tag_text = state.tag_text + ch.str()
 					}
 				}
