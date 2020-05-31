@@ -23,10 +23,10 @@ struct ParserState {
 
 struct Node {
 	pub mut:
-		attributes []Attribute = []Attribute{}
-		name string = ''
-		text string = ''
-		childrens []Node = []Node{}
+		attributes []Attribute
+		name string
+		text string
+		childrens []Node
 		parent &Node
 }
 
