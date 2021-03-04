@@ -55,7 +55,7 @@ pub fn (node Node) str() string {
 }
 
 pub fn parse(xml string) Node {
-	root := Node{name: '_root_', parent: &Node(0)}
+	mut root := Node{name: '_root_', parent: &Node(0)}
 	chars := xml.bytes()
 
 	mut state := ParserState{} // initialize with default parameters
