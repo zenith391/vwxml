@@ -1,6 +1,8 @@
 # vwxml
 Pure V library for parsing XML. The data is accessed with a tree API accessible directly within the `Node`  struct.
 
+**This library is now archived.**
+
 ![CI](https://github.com/zenith391/vwxml/workflows/CI/badge.svg)
 
 Example: this parses `<thing abc="test"><test>Hello</test></thing>` to
